@@ -1,3 +1,4 @@
+#! /bin/rdmd
 import pattern_module : Pattern;
 
 void main() {
