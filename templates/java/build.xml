@@ -1,0 +1,14 @@
+<project name="Program" default="compile" basedir=".">
+	<property name="source" location="src"></property>
+	<property name="build" location="bin"></property>
+
+	<target name="compile">
+		<mkdir dir="${build}"/>
+		<javac srcdir="${source}" destdir="${build}" includeantruntime="false"/>
+		<jar jarfile="program.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="HelloWorld"/> <!-- Edit your main class name here! -->
+			</manifest>
+		</jar>
+	</target>
+</project>
