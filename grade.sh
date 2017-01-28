@@ -4,6 +4,9 @@ function grade () {
 		return 1
 	fi
 
+	local student_language="$1"
+	# TODO: Add detection logic based on .language-spec
+
 	local teacher_files=".teacher_files"
 	function log_execution () {
 		echo -e "---- RUNNING STUDENT PROGRAM ----\n"
@@ -36,7 +39,10 @@ function grade () {
 		open_source_files "$source_code_pattern"
 	}
 
-	function run_student_code () { :; }
+	function run_student_code () {
+		echo "Running normal build script for $student_language language"
+		./build.sh
+	}
 
 	function clean_up () {
 		unset clean_up
@@ -51,28 +57,25 @@ function grade () {
 
 	mkdir -p $teacher_files
 
-	case $1 in
+	case $language in
+		"cplusplus"*)
+			;&
 		"c++"*)
-			function run_student_code () {
-				rm ./program.exe
-				make
-				log_execution ./program.exe
-			}
 			source_code_pattern='.*\.(h|cpp)'
 			;;
 
+		"csharp_standalone"*)
+			;&
 		"cs-single"*)
-			function run_student_code () {
-				rm Program.exe
-				mcs Program.cs
-				log_execution ./Program.exe
-			}
 			source_code_pattern='(.*\.cs)'
 			;;
 
+		"csharp_visual_studio"*)
+			;&
 		"cs-vs"*)
-			echo "Go CS from VS!"
+			source_code_pattern='(.*\.cs)'
 			function run_student_code () {
+				echo "Running script for C# Visual Studio..."
 				rm -rf */bin
 				xbuild *.sln
 
@@ -80,25 +83,21 @@ function grade () {
 					log_execution "$file"
 				done
 			}
-			source_code_pattern='(.*\.cs)'
 			;;
 
 		"d"*)
 			echo "Go D!"
-			function run_student_code () {
-				log_execution rdmd ./program.d
-			}
 			source_code_pattern='(.*\.d)'
 			;;
 
 		"java"*)
 			echo "Go Java!"
+			source_code_pattern='(.*\.java)'
 			function run_student_code () {
 				rm ./program.jar
 				ant
 				java -jar ./program.jar
 			}
-			source_code_pattern='(.*\.java)'
 			;;
 
 		*)
