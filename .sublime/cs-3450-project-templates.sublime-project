@@ -4,6 +4,14 @@
 		{
 			"path": ".."
 		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "CS 3450: Compile templates",
+			"cmd": "../compile-templates.sh",
+			"shell": true
+		}
 	]
 }
 
