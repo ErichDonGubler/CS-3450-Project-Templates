@@ -4,7 +4,7 @@ function compile_templates () {
 	local templates_folder="templates"
 
 	rm -rf "$distribution_folder"
-	git clean -fdx
+	./clean.sh
 	mkdir -p "$distribution_folder"
 
 	for language in $(ls "$templates_folder"); do
