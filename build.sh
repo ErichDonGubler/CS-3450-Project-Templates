@@ -15,8 +15,10 @@ function compile_templates () {
 		pushd . > /dev/null
 
 		cd "$language_distribution_folder"
+		local language_archive="$language-project-template.zip"
 		echo "$language" > "$language_spec_file"
-		zip -r "../$language-project-template.zip" .
+		echo -e "Zipping \"$language_source_folder\" into \"$language_archive\""
+		zip -r "../$language_archive" .
 
 		popd > /dev/null
 

@@ -1,8 +1,9 @@
 function test_templates () {
-	./compile-templates.sh
+	./build.sh
+	. ./grade.sh
 
 	if [ $? != 0 ]; then
-		echo "Unable to compile templates -- see output for more details" 1>&2
+		echo "Unable to build -- see output for more details" 1>&2
 		exit 1
 	fi
 
@@ -13,13 +14,13 @@ function test_templates () {
 	for archive in $(ls $distribution_folder); do
 		local archive_path="$distribution_folder/$archive"
 		echo "Testing $archive_path"
-		local test_folder="$test_folder/$archive"
-		unzip "$archive_path" -d "$test_folder"
+		local archive_test_folder="$test_folder/$archive"
+		unzip "$archive_path" -d "$archive_test_folder"
 
 		pushd . > /dev/null
 
-		cd "$test_folder"
-		../../grade.sh
+		cd "$archive_test_folder"
+		grade
 
 		popd > /dev/null
 	done
