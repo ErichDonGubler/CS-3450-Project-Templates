@@ -7,7 +7,7 @@
 		<javac srcdir="${source}" destdir="${build}" includeantruntime="false"/>
 		<jar jarfile="program.jar" basedir="${build}">
 			<manifest>
-				<attribute name="Main-Class" value="HelloWorld"/> <!-- Edit your main class name here! -->
+				<attribute name="Main-Class" value="Main"/> <!-- Edit your main class name here! -->
 			</manifest>
 		</jar>
 	</target>
