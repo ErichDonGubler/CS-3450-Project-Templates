@@ -180,6 +180,9 @@ function grade () {
 
 		"python3"*)
 			source_code_pattern='(.*\.py)'
+			function run_student_code_fallback () {
+				python program.py
+			}
 			;;
 
 		*)
