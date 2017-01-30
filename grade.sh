@@ -85,6 +85,10 @@ function grade () {
 		return $return_code
 	}
 
+	function remove_file () {
+		[ -f "$1"] && rm "$1"
+	}
+
 	function clean_up () {
 		unset clean_up
 		unset find_files
@@ -107,9 +111,21 @@ function grade () {
 		"c++"*)
 			source_code_pattern='.*\.(h|cpp)'
 			function run_student_code_fallback () {
-				rm ./program.exe
-				make
-				log_execution ./program.exe
+				remove_file "./program.exe"
+				remove_file "./a.out"
+				local makefile="make"
+				if [ -f "$makefile" ]; then
+					make
+				else
+					local source_location="src"
+
+					if ! [ -d "$source_location" ]; then
+						echo -e "\"$source_location\" not found, trying to compile at root..."
+						source_location="."
+					fi
+
+					g++ "$source_location"/*.cpp && log_execution ./a.out
+				fi
 			}
 			;;
 
@@ -118,7 +134,7 @@ function grade () {
 		"cs-single"*)
 			source_code_pattern='(.*\.cs)'
 			function run_student_code_fallback () {
-				rm Program.exe
+				remove_file Program.exe
 				mcs Program.cs
 				log_execution ./Program.exe
 			}
@@ -149,7 +165,7 @@ function grade () {
 		"java"*)
 			source_code_pattern='(.*\.java)'
 			function run_student_code_fallback () {
-				rm ./program.jar
+				remove_file ./program.jar
 				ant
 				java -jar ./program.jar
 			}
