@@ -1,2 +1,4 @@
-REM Outputs "program.jar" at the top level here
+del program.jar
 ant
+java -jar program.jar
+
