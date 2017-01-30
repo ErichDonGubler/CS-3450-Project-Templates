@@ -33,7 +33,7 @@ function grade () {
 
 	function open_documents () {
 		echo "--- OPENING DOCUMENT FILES ---"
-		for file in $(find_files ".*\.(doc|pdf|png|jpg|html)"); do # FIXME: This will break if there's a file with spaces in it
+		for file in $(find_files '.*\.(doc|docx|pdf|png|jpg|html)'); do # FIXME: This will break if there's a file with spaces in it
 			echo "Found displayable file \"$file\""
 			xdg-open "$file"
 		done
@@ -61,7 +61,7 @@ function grade () {
 	}
 
 	function run_student_code () {
-		echo "--- RUNNING CODE ---"
+		echo "--- BUILDING STUDENT CODE ---"
 
 		local NORMAL_BUILD_SCRIPT="./build.sh"
 
@@ -70,14 +70,14 @@ function grade () {
 		if [ -f "$NORMAL_BUILD_SCRIPT" ]; then
 			echo "$NORMAL_BUILD_SCRIPT detected -- running normal build script for $student_language language"
 			$NORMAL_BUILD_SCRIPT; return_code="$?"
-		elif [[ -v run_student_code_fallback ]]; then
+		elif declare -f run_student_code_fallback > /dev/null; then
 			echo "No $NORMAL_BUILD_SCRIPT found, running fallback builder"
 			run_student_code_fallback; return_code="$?"
 			if [ ! $return_code ]; then
 				print_run_error "Fallback failed."
 			fi
 		else
-			print_run_error "No build script found for this language."
+			print_run_error "Internal error: no build script or fallback build script found for this language."
 		fi
 
 		wait_for_input
