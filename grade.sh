@@ -171,6 +171,12 @@ function grade () {
 			}
 			;;
 
+		"php"*)
+			source_code_pattern='(.*\.php)'
+			function run_student_code_fallback () {
+				php program.php
+			}
+			;;
 
 		"python3"*)
 			source_code_pattern='(.*\.py)'
