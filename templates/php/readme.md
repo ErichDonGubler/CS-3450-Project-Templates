@@ -1,0 +1,1 @@
+This project comes prepackaged with a PHP distribution for Windows, and can be run with `build.bat`. If running this in Bash, you will need to have your own distribution of PHP. PHP 7.1 was used for this project, but 5.5 and 5.6 should also work.
