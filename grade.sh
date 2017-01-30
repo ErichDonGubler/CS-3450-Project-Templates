@@ -69,6 +69,7 @@ function grade () {
 
 		if [ -f "$NORMAL_BUILD_SCRIPT" ]; then
 			echo "$NORMAL_BUILD_SCRIPT detected -- running normal build script for $student_language language"
+			chmod +x "$NORMAL_BUILD_SCRIPT"
 			$NORMAL_BUILD_SCRIPT; return_code="$?"
 		elif declare -f run_student_code_fallback > /dev/null; then
 			echo "No $NORMAL_BUILD_SCRIPT found, running fallback builder"
