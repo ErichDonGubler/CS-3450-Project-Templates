@@ -33,7 +33,7 @@ function grade () {
 
 	function open_documents () {
 		echo "--- OPENING DOCUMENT FILES ---"
-		for file in $(find_files '.*\.(doc|docx|pdf|png|jpg|html)'); do # FIXME: This will break if there's a file with spaces in it
+		find_files '.*\.(doc|docx|pdf|png|jpg|html)' | while read file; do
 			echo "Found displayable file \"$file\""
 			xdg-open "$file"
 		done
@@ -87,7 +87,7 @@ function grade () {
 	}
 
 	function remove_file () {
-		[ -f "$1"] && rm "$1"
+		[ -f "$1" ] && rm "$1"
 	}
 
 	function clean_up () {
