@@ -42,7 +42,7 @@ function grade () {
 	function open_source_files () {
 		echo "--- OPENING SOURCE FILES ---"
 		echo "Opening source files that match \"$@\"..."
-		find_files "$@" | xargs vim -O
+		find_files "$@" | xargs subl3 -n
 		stty sane
 	}
 
