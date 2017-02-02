@@ -5,7 +5,7 @@ function grade_find_files () {
 }
 
 function grade () {
-	local LANGUAGE_SPEC_FILE=".language-spec"
+	local LANGUAGE_SPEC_FILE="language-spec.txt"
 	local student_language=""
 
 	if [ -f "$LANGUAGE_SPEC_FILE" ]; then
@@ -209,7 +209,7 @@ function grade_loop () {
 		tar -xvf "$archive" -C "$archive-extracted"
 		rm -f "$archive"
 	done
-	
+
 	while read -n1 -r -p "Grade something? [y]es|[n]o: "; do
 		echo
 		case $REPLY in
@@ -220,9 +220,9 @@ function grade_loop () {
 
 				if [ -f .language-spec ]; then
 					grade
-				else				
+				else
 					read -p "$(echo -e "This student doesn't have a .language-spec! Here's their files:\n$(ls)\n\nWhat language to grade with? ")" language
-					
+
 					if [ "$language" ]; then
 						grade "$language"
 					else

@@ -1,6 +1,6 @@
 function compile_templates () {
 	local distribution_folder="dist"
-	local language_spec_file=".language-spec"
+	local language_spec_file="language-spec.txt"
 	local templates_folder="templates"
 
 	rm -rf "$distribution_folder"
