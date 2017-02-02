@@ -27,17 +27,12 @@ function grade () {
 		find . -type f -regextype posix-extended -iregex "$@"
 	}
 
-	function wait_for_input () {
-		read -p "Press any key to continue..."
-	}
-
 	function open_documents () {
 		echo "--- OPENING DOCUMENT FILES ---"
 		find_files '.*\.(doc|docx|pdf|png|jpg|html)' | while read file; do
 			echo "Found displayable file \"$file\""
 			xdg-open "$file"
 		done
-		wait_for_input
 	}
 	function open_source_files () {
 		echo "--- OPENING SOURCE FILES ---"
@@ -80,8 +75,6 @@ function grade () {
 		else
 			print_run_error "Internal error: no build script or fallback build script found for this language."
 		fi
-
-		wait_for_input
 
 		return $return_code
 	}
@@ -200,3 +193,36 @@ function grade () {
 
 	return 0
 }
+
+function grade_loop () {
+	for archive in $(ls *.zip); do
+		mkdir -p "$archive-extracted"
+		unzip "$archive" "$archive-extracted"
+		rm -f "$archive"
+	done
+
+	for archive in $(ls *.tar*); do
+		mkdir -p "$archive-extracted"
+		tar -xvf "$archive" -C "$archive-extracted"
+		rm -f "$archive"
+	done
+	
+	while read -n1 -r -p "Grade something? [y]es|[n]o: "; do
+		echo
+		case $REPLY in
+		y)
+			pushd . > /dev/null
+			next=$(ls | grep '.*-extracted' | fzf)
+			cd "$next"
+			echo "Look, I'm in $(pwd)"
+			# grade
+			read		
+			popd
+			;;
+		n)
+			break
+			;;
+		esac
+	done
+}
+
