@@ -1,3 +1,9 @@
+#! /bin/bash
+
+function grade_find_files () {
+	find . -type f -regextype posix-extended -iregex "$@"
+}
+
 function grade () {
 	local LANGUAGE_SPEC_FILE=".language-spec"
 	local student_language=""
@@ -23,13 +29,9 @@ function grade () {
 		echo -e "---- END STUDENT PROGRAM ----\n"
 	}
 
-	function find_files () {
-		find . -type f -regextype posix-extended -iregex "$@"
-	}
-
 	function open_documents () {
 		echo "--- OPENING DOCUMENT FILES ---"
-		find_files '.*\.(doc|docx|pdf|png|jpg|html)' | while read file; do
+		grade_find_files '.*\.(doc|docx|pdf|png|jpg|html)' | while read file; do
 			echo "Found displayable file \"$file\""
 			xdg-open "$file"
 		done
@@ -37,8 +39,10 @@ function grade () {
 	function open_source_files () {
 		echo "--- OPENING SOURCE FILES ---"
 		echo "Opening source files that match \"$@\"..."
-		find_files "$@" | xargs subl3 -n
-		stty sane
+		subl3 -n
+		grade_find_files "$@" | while read file; do
+			subl3 "$file"
+		done
 	}
 
 	local source_code_pattern=""
@@ -85,7 +89,6 @@ function grade () {
 
 	function clean_up () {
 		unset clean_up
-		unset find_files
 		unset LANGUAGE_SPEC_FILE
 		unset log_execution
 		unset open_documents
@@ -195,13 +198,13 @@ function grade () {
 }
 
 function grade_loop () {
-	for archive in $(ls *.zip); do
+	grade_find_files '.*\.(zip)' | while read archive; do
 		mkdir -p "$archive-extracted"
-		unzip "$archive" "$archive-extracted"
+		unzip "$archive" -d "$archive-extracted"
 		rm -f "$archive"
 	done
 
-	for archive in $(ls *.tar*); do
+	grade_find_files '.*\.tar.*' | while read archive; do
 		mkdir -p "$archive-extracted"
 		tar -xvf "$archive" -C "$archive-extracted"
 		rm -f "$archive"
@@ -210,19 +213,31 @@ function grade_loop () {
 	while read -n1 -r -p "Grade something? [y]es|[n]o: "; do
 		echo
 		case $REPLY in
-		y)
-			pushd . > /dev/null
-			next=$(ls | grep '.*-extracted' | fzf)
-			cd "$next"
-			echo "Look, I'm in $(pwd)"
-			# grade
-			read		
-			popd
-			;;
-		n)
-			break
-			;;
-		esac
+			y)
+				pushd . > /dev/null
+				next=$(ls | grep '.*-extracted' | fzf)
+				cd "$next"
+
+				if [ -f .language-spec ]; then
+					grade
+				else				
+					read -p "$(echo -e "This student doesn't have a .language-spec! Here's their files:\n$(ls)\n\nWhat language to grade with? ")" language
+					
+					if [ "$language" ]; then
+						grade "$language"
+					else
+						echo "No language specified, skipping"
+					fi
+				fi
+
+				popd > /dev/null
+				;;
+			n)
+				;&
+			*)
+				break
+				;;
+			esac
 	done
 }
 
