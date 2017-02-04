@@ -209,20 +209,20 @@ function grade_loop () {
 		tar -xvf "$archive" -C "$archive-extracted"
 		rm -f "$archive"
 	done
-	
+
 	while read -n1 -r -p "Grade something? [y]es|[n]o: "; do
 		echo
 		case $REPLY in
 			y)
 				pushd . > /dev/null
-				next=$(ls | grep '.*-extracted' | fzf)
+				next=$(ls | grep '.*-extracted' | fzf --height=40% --reverse)
 				cd "$next"
 
 				if [ -f .language-spec ]; then
 					grade
-				else				
+				else
 					read -p "$(echo -e "This student doesn't have a .language-spec! Here's their files:\n$(ls)\n\nWhat language to grade with? ")" language
-					
+
 					if [ "$language" ]; then
 						grade "$language"
 					else
