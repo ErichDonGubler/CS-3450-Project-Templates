@@ -112,7 +112,7 @@ function grade () {
 				remove_file "./a.out"
 				local makefile="make"
 				if [ -f "$makefile" ]; then
-					make
+					log_execution make
 				else
 					local source_location="src"
 
@@ -164,21 +164,21 @@ function grade () {
 			function run_student_code_fallback () {
 				remove_file ./program.jar
 				ant
-				java -jar ./program.jar
+				log_execution java -jar ./program.jar
 			}
 			;;
 
 		"php"*)
 			source_code_pattern='(.*\.php)'
 			function run_student_code_fallback () {
-				php program.php
+				log_execution php program.php
 			}
 			;;
 
 		"python3"*)
 			source_code_pattern='(.*\.py)'
 			function run_student_code_fallback () {
-				python program.py
+				log_execution python program.py
 			}
 			;;
 
