@@ -1,7 +1,7 @@
 function compile_templates () {
 	local distribution_folder="dist"
-	local language_spec_file=".language-spec"
-	local templates_folder="templates"
+	local language_spec_file="language.txt"
+	local templates_folder="src/templates"
 
 	rm -rf "$distribution_folder"
 	./clean.sh
