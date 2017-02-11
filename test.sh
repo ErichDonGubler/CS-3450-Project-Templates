@@ -1,6 +1,6 @@
 function test_templates () {
 	./build.sh
-	. ./grade.sh
+	. ./src/grade.sh
 
 	if [ $? != 0 ]; then
 		echo "Unable to build -- see output for more details" 1>&2
