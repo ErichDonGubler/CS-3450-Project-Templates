@@ -5,7 +5,7 @@ function grade_find_files () {
 }
 
 function grade () {
-	local LANGUAGE_SPEC_FILE=".language-spec"
+	local LANGUAGE_SPEC_FILE="language-spec.txt"
 	local student_language=""
 
 	if [ -f "$LANGUAGE_SPEC_FILE" ]; then
