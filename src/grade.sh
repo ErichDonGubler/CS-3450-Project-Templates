@@ -4,6 +4,16 @@ function grade_find_files () {
 	find . -type f -regextype posix-extended -iregex "$@"
 }
 
+if ! declare -f grade_editor > /dev/null; then
+	echo "Grade editor not specified, defaulting to Sublime"
+	function grade_editor () {
+		subl3 -n
+		grade_find_files "$@" | while read file; do
+			subl3 "$file"
+		done
+	}
+fi
+
 function grade () {
 	local LANGUAGE_SPEC_FILE="language-spec.txt"
 	local student_language=""
@@ -36,18 +46,12 @@ function grade () {
 			xdg-open "$file"
 		done
 	}
-	function open_source_files () {
-		echo "--- OPENING SOURCE FILES ---"
-		echo "Opening source files that match \"$@\"..."
-		subl3 -n
-		grade_find_files "$@" | while read file; do
-			subl3 "$file"
-		done
-	}
 
 	local source_code_pattern=""
 	function open_student_code () {
-		open_source_files "$source_code_pattern"
+		echo "--- OPENING SOURCE FILES ---"
+		echo "Opening source files that match \"$@\"..."
+		grade_editor "$source_code_pattern"
 	}
 
 	function print_run_error () {
@@ -92,7 +96,6 @@ function grade () {
 		unset LANGUAGE_SPEC_FILE
 		unset log_execution
 		unset open_documents
-		unset open_source_files
 		unset open_student_code
 		unset print_run_error
 		unset run_student_code
