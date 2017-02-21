@@ -40,7 +40,7 @@ function grade () {
 	function open_documents () {
 		echo "--- OPENING DOCUMENT FILES ---"
 		grade_find_files '.*\.(doc|docx|pdf|png|jpg|html)' | while read file; do
-			echo "Found displayable file \"$file\""
+			echo "  Found displayable file \"$file\""
 			xdg-open "$file"
 		done
 	}
