@@ -193,6 +193,8 @@ function grade () {
 }
 
 function grade_loop () {
+	local LANGUAGE_SPEC_FILE="language-spec.txt"
+
 	grade_find_files '.*\.(zip)' | while read archive; do
 		mkdir -p "$archive-extracted"
 		unzip "$archive" -d "$archive-extracted"
@@ -205,34 +207,29 @@ function grade_loop () {
 		rm -f "$archive"
 	done
 
-	while read -n1 -r -p "Grade something? [y]es|[n]o: "; do
-		echo
-		case $REPLY in
-			y)
-				pushd . > /dev/null
-				next=$(ls | grep '.*-extracted' | fzf --height=40% --reverse)
-				cd "$next"
+	while : ; do
+		pushd . > /dev/null
+		next=$(ls | grep '.*-extracted' | fzf --height=40% --reverse)
 
-				if [ -f .language-spec ]; then
-					grade
-				else
-					read -p "$(echo -e "This student doesn't have a .language-spec! Here's their files:\n$(ls)\n\nWhat language to grade with? ")" language
+		if [[ -z "$next" ]]; then
+			break
+		fi
 
-					if [ "$language" ]; then
-						grade "$language"
-					else
-						echo "No language specified, skipping"
-					fi
-				fi
+		cd "$next"
 
-				popd > /dev/null
-				;;
-			n)
-				;&
-			*)
-				break
-				;;
-			esac
+		if [ -f "$LANGUAGE_SPEC_FILE" ]; then
+			grade
+		else
+			read -p "$(echo -e "WARNING: This student doesn't have a $LANGUAGE_SPEC_FILE! Here's their files:\n$(find .)\n\nWhat language to grade with? ")" language
+
+			if [ "$language" ]; then
+				grade "$language"
+			else
+				echo "No language specified, skipping"
+			fi
+		fi
+
+		popd > /dev/null
 	done
 }
 
