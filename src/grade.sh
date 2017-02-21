@@ -5,12 +5,10 @@ function grade_find_files () {
 }
 
 if ! declare -f grade_editor > /dev/null; then
-	echo "Grade editor not specified, defaulting to Sublime"
 	function grade_editor () {
-		subl3 -n
-		grade_find_files "$@" | while read file; do
-			subl3 "$file"
-		done
+		echo "Grade editor not specified, defaulting to Vim"
+		local main_file="$1"
+		vim "$main_file"
 	}
 fi
 
@@ -48,11 +46,6 @@ function grade () {
 	}
 
 	local source_code_pattern=""
-	function open_student_code () {
-		echo "--- OPENING SOURCE FILES ---"
-		echo "Opening source files that match \"$@\"..."
-		grade_editor "$source_code_pattern"
-	}
 
 	function print_run_error () {
 		echo -e "ERROR: $@ -- Time to talk to the student!" 1>&2
@@ -96,7 +89,6 @@ function grade () {
 		unset LANGUAGE_SPEC_FILE
 		unset log_execution
 		unset open_documents
-		unset open_student_code
 		unset print_run_error
 		unset run_student_code
 		unset student_language
@@ -194,7 +186,7 @@ function grade () {
 
 	open_documents
 	run_student_code
-	open_student_code
+	grade_editor .
 	clean_up
 
 	return 0
