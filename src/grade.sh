@@ -175,7 +175,7 @@ function grade () {
 		"python3"*)
 			source_code_pattern='(.*\.py)'
 			function run_student_code_fallback () {
-				log_execution python program.py
+				log_execution python3 program.py
 			}
 			;;
 
