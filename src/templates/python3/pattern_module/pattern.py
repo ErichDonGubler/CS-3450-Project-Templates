@@ -3,4 +3,5 @@ class Pattern(object):
 		super(Pattern, self).__init__()
 
 	def do_something(self):
-		print("I'm a pattern!")
+		print('I\'m a pattern!')
+
