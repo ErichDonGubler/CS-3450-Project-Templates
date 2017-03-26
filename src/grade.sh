@@ -235,3 +235,5 @@ function grade_loop () {
 	done
 }
 
+alias gl='grade_loop'
+
