@@ -172,6 +172,13 @@ function grade () {
 			}
 			;;
 
+		"python2"*)
+			source_code_pattern='(.*\.py)'
+			function run_student_code_fallback () {
+				log_execution python2 program.py
+			}
+			;;
+
 		"python3"*)
 			source_code_pattern='(.*\.py)'
 			function run_student_code_fallback () {
