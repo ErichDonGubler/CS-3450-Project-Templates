@@ -129,7 +129,7 @@ function grade () {
 			source_code_pattern='(.*\.cs)'
 			function run_student_code_fallback () {
 				remove_file Program.exe
-				mcs Program.cs
+				mcs *.cs
 				log_execution ./Program.exe
 			}
 			;;
