@@ -98,6 +98,8 @@ function grade () {
 	mkdir -p $teacher_files
 
 	case "$student_language" in
+		"cpp"*)
+			;&
 		"cplusplus"*)
 			;&
 		"c++"*)
